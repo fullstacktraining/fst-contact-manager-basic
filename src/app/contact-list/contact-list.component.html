@@ -14,7 +14,7 @@
   
     <ng-container mdColumnDef="email">
       <md-header-cell *mdHeaderCellDef> Email </md-header-cell>
-      <md-cell *mdCellDef="let element"> {{ element.email }} </md-cell>
+      <md-cell *mdCellDef="let element"><a href="mailto:{{ element.email }}">{{ element.email }}</a></md-cell>
     </ng-container>
   
     <ng-container mdColumnDef="view">

@@ -12,7 +12,7 @@
         <input mdInput disabled placeholder="Phone" value="{{ data.phone }}">
     </md-form-field>
     <md-form-field class="full">
-        <input mdInput disabled placeholder="Email" value="{{ data.email }}">
+        <a href="mailto:{{ data.email }}"><input mdInput disabled placeholder="Email" value="{{ data.email }}"></a>
     </md-form-field>
     <md-form-field class="full">
         <input mdInput disabled placeholder="address" value="{{ data.address }}">
