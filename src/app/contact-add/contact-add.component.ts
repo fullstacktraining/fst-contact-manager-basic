@@ -3,6 +3,9 @@ import { MdDialog, MdDialogRef, MD_DIALOG_DATA, MdSnackBar } from '@angular/mate
 
 import { ContactListComponent } from '../contact-list/contact-list.component';
 import { ContactService } from '../contact.service';
+import { IContact } from './../contact';
+
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-contact-add',
@@ -11,16 +14,16 @@ import { ContactService } from '../contact.service';
 })
 export class ContactAddComponent {
 
-  data = {};
+  data: Object = {};
   constructor(
     public contactService: ContactService,
     public snackBar: MdSnackBar,
     public dialogRef: MdDialogRef<ContactListComponent>) { }
 
-  save(data) {
-    this.contactService.add(data).subscribe(response => {
+  save(contact: IContact): void {
+    this.contactService.add(contact).subscribe(response => {
       if (response.ok) {
-        this.notify(`${data.name} added to your contacts.`);
+        this.notify(`${contact.name} added to your contacts.`);
         this.close();
       }
     });

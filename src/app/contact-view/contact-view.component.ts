@@ -2,10 +2,10 @@ import { Component, Inject } from '@angular/core';
 import { MdDialog, MdDialogRef, MD_DIALOG_DATA, MdSnackBar } from '@angular/material';
 
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
-
 import { ContactListComponent } from '../contact-list/contact-list.component';
 import { ContactService } from '../contact.service';
 
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-contact-view',
@@ -14,40 +14,50 @@ import { ContactService } from '../contact.service';
 })
 
 export class ContactViewDialogComponent {
-  public show: Boolean = false;
+  public displayed: Boolean = false;
+
   constructor(public dialogRef: MdDialogRef<ContactListComponent>,
     @Inject(MD_DIALOG_DATA) public data: any,
     public contactService: ContactService,
     public snackBar: MdSnackBar,
     public dialog: MdDialog) { }
 
-  delete(id) {
-    this.contactService.delete(id).subscribe();
-  }
-
-  openConfirmDialog(id): void {
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+  openConfirmDialog(id: string): void {
+    const dialogRef: MdDialogRef<ConfirmDialogComponent> = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: 'Confirmation',
         message: 'Are you sure you want to delete this contact?'
       }
     });
-    dialogRef.afterClosed().subscribe(response => {
-      if (response) {
-        this.delete(id);
-        this.notify('Contact Deleted');
-        this.dialog.getDialogById('contact-dialog').close();
+
+    dialogRef.afterClosed().subscribe((confirmation: Response) => {
+      if (confirmation) {
+        this.delete(id).map((response: any) => response.json()).subscribe((response: any) => {
+          if (response.ok === 1) {
+            this.notify('Contact Deleted');
+            this.dialog.getDialogById('contact-dialog').close();
+          }
+        });
       }
     });
   }
 
-  showForm(): Boolean {
-    return this.show = true;
+  displayForm(): Boolean {
+    return this.displayed = true;
   }
 
-  save(id, data): void {
+  save(id: string, data: any): void {
     delete data._id;
-    this.contactService.save(id, data).subscribe();
+    this.contactService.save(id, data).map((response: any) => response.json()).subscribe((response: any) => {
+      if (response.ok === 1) {
+        this.notify(`${data.name} updated`);
+        this.close();
+      }
+    });
+  }
+
+  delete(id: string): Observable<any> {
+    return this.contactService.delete(id);
   }
 
   notify(message: string): void {

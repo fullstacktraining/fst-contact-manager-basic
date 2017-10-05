@@ -10,25 +10,23 @@ export class ContactService {
 
   constructor(private http: Http) { }
 
-  list() {
-    return this.http.get('http://localhost:3000/api/contacts').map(response => response.json()).catch(error => Observable.throw(error));
+  list(): Observable<any> {
+    return this.http.get('http://localhost:3000/api/contacts');
   }
 
-  view(objectID) {
-    return this.http.get(`http://localhost:3000/api/contacts/${objectID}`)
-            .map(response => response.json()).catch(error => Observable.throw(error));
+  view(id: string): Observable<any> {
+    return this.http.get(`http://localhost:3000/api/contacts/${id}`);
   }
 
-  add(contact) {
-    // console.log(add);
+  add(contact: IContact): Observable<any> {
     return this.http.post(`http://localhost:3000/api/contacts`, contact);
   }
 
-  save(objectID, contact) {
-    return this.http.post(`http://localhost:3000/api/contacts/${objectID}`, contact);
+  save(id: string, contact: IContact): Observable<any> {
+    return this.http.post(`http://localhost:3000/api/contacts/${id}`, contact);
   }
 
-  delete(objectID) {
-    return this.http.delete(`http://localhost:3000/api/contacts/${objectID}`);
+  delete(id: string): Observable<any> {
+    return this.http.delete(`http://localhost:3000/api/contacts/${id}`);
   }
 }

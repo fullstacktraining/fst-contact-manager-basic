@@ -19,55 +19,52 @@ server.use(restify.plugins.bodyParser({ mapParams: false }));
 
 server.get('/api/contacts', (req, res) => {
   connection.then(response => {
-    const contacts = response.collection('contacts');
+    const contacts = response.collection(settings.collection);
     return contacts.find({}).toArray();
   }).then(response => {
     res.json(response);
-  });
+  }).catch(error => console.error(error));
 });
 
 server.post('/api/contacts', (req, res) => {
   connection.then(response => {
-    const contacts = response.collection('contacts');
-    return contacts.insertOne(req.body);
+    const contacts = response.collection(settings.collection);
+    const contact = req.body;
+    return contacts.insertOne(contact);
   }).then(response => {
-    console.log(response);
     res.json(response);
-  });
+  }).catch(error => console.error(error));
 });
 
-server.get('/api/contacts/:objectID', (req, res) => {
-  const objectID = req.params.objectID;
+server.get('/api/contacts/:id', (req, res) => {
+  const objectID = req.params.id;
   connection.then(response => {
-    const contacts = response.collection('contacts');
+    const contacts = response.collection(settings.collection);
     return contacts.findOne(ObjectID(objectID));
   }).then(response => {
     res.json(response);
-  });
+  }).catch(error => console.error(error));
 });
 
-server.post('/api/contacts/:objectID', (req, res) => {
-  const objectID = req.params.objectID;
+server.post('/api/contacts/:id', (req, res) => {
+  const objectID = req.params.id;
   connection.then(response => {
-    const contacts = response.collection('contacts');
-    return contacts.replaceOne({ _id: ObjectID(objectID) }, req.body);
+    const contacts = response.collection(settings.collection);
+    const contact = req.body;
+    return contacts.replaceOne({ _id: ObjectID(objectID) }, contact);
   }).then(response => {
-    console.log(response.matchedCount);
     res.json(response);
-  });
+  }).catch(error => console.error(error));
 });
 
-server.del('/api/contacts/:objectID', (req, res) => {
-  const objectID = req.params.objectID;
+server.del('/api/contacts/:id', (req, res) => {
+  const objectID = req.params.id;
   connection.then(response => {
-    const contacts = response.collection('contacts');
+    const contacts = response.collection(settings.collection);
     return contacts.deleteOne({ _id: ObjectID(objectID) });
   }).then(response => {
-    console.log(response.deletedCount);
     res.json(response);
   });
 });
-// server.get('/products', (req, res, next) => res.send('Get Products'));
-// server.get('/products/:id', (req, res, next) => res.json(`Getting product with ID: ${req.params.id}`));
 
 server.listen(3000, () => console.log('Magic happens on port 3000'));

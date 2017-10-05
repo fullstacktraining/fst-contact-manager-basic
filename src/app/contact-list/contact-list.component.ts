@@ -2,17 +2,12 @@ import { Component, Inject, Input } from '@angular/core';
 import { DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-
-import { ContactService } from '../contact.service';
-import { MdDialog, MdDialogRef, MD_DIALOG_DATA } from '@angular/material';
-
-// import { BsModalService } from 'ngx-bootstrap/modal';
-// import { BsModalRef } from 'ngx-bootstrap/modal/modal-options.class';
+import { MdTable, MdDialog, MdDialogRef, MD_DIALOG_DATA } from '@angular/material';
 
 import { ContactViewDialogComponent } from '../contact-view/contact-view.component';
 import { ContactAddComponent } from '../contact-add/contact-add.component';
 
-import { MdTable } from '@angular/material';
+import { ContactService } from '../contact.service';
 
 @Component({
   selector: 'app-contact-list',
@@ -21,14 +16,14 @@ import { MdTable } from '@angular/material';
 })
 
 export class ContactListComponent {
-  displayedColumns = ['name', 'phone', 'email', 'view'];
-  dataSource = new ContactDataSource(this.contactService);
+  displayedColumns: string[] = ['name', 'phone', 'email', 'view'];
+  dataSource: DataSource<any> = new ContactDataSource(this.contactService);
 
   constructor(private contactService: ContactService, public dialog: MdDialog) { }
 
-  openDialog(id): void {
-    this.contactService.view(id).subscribe(response => {
-      const dialogRef = this.dialog.open(ContactViewDialogComponent, {
+  openDialog(id: string): void {
+    this.contactService.view(id).map((response: Response) => response.json()).subscribe((response: Promise<Response>) => {
+      const dialogRef: MdDialogRef<ContactViewDialogComponent> = this.dialog.open(ContactViewDialogComponent, {
         id: 'contact-dialog',
         width: '450px',
         data: response
@@ -40,7 +35,7 @@ export class ContactListComponent {
   }
 
   openAddDialog(): void {
-    const dialogRef = this.dialog.open(ContactAddComponent, {
+    const dialogRef: MdDialogRef<ContactAddComponent> = this.dialog.open(ContactAddComponent, {
       width: '450px'
     });
     dialogRef.afterClosed().subscribe(() => {
@@ -54,7 +49,10 @@ export class ContactDataSource extends DataSource<any> {
     super();
   }
   connect(): Observable<any> {
-    return this.contactService.list();
+    return this.contactService.list()
+      .map((response: any) => response.json())
+      .catch((error: Error) => Observable.throw(error));
   }
+
   disconnect() {}
 }
