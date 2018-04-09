@@ -19,8 +19,8 @@ server.use(restify.plugins.bodyParser({ mapParams: false }));
 
 server.get('/api/contacts', (req, res) => {
   connection.then(response => {
-    const contacts = response.collection(settings.collection);
-    return contacts.find({}).toArray();
+    const contactsCollection = response.collection(settings.collection);
+    return contactsCollection.find({}).toArray();
   }).then(response => {
     res.json(response);
   }).catch(error => console.error(error));
@@ -28,9 +28,9 @@ server.get('/api/contacts', (req, res) => {
 
 server.post('/api/contacts', (req, res) => {
   connection.then(response => {
-    const contacts = response.collection(settings.collection);
+    const contactsCollection = response.collection(settings.collection);
     const contact = req.body;
-    return contacts.insertOne(contact);
+    return contactsCollection.insertOne(contact);
   }).then(response => {
     res.json(response);
   }).catch(error => console.error(error));
@@ -39,8 +39,8 @@ server.post('/api/contacts', (req, res) => {
 server.get('/api/contacts/:id', (req, res) => {
   const objectID = req.params.id;
   connection.then(response => {
-    const contacts = response.collection(settings.collection);
-    return contacts.findOne(ObjectID(objectID));
+    const contactsCollection = response.collection(settings.collection);
+    return contactsCollection.findOne(ObjectID(objectID));
   }).then(response => {
     res.json(response);
   }).catch(error => console.error(error));
@@ -49,9 +49,9 @@ server.get('/api/contacts/:id', (req, res) => {
 server.post('/api/contacts/:id', (req, res) => {
   const objectID = req.params.id;
   connection.then(response => {
-    const contacts = response.collection(settings.collection);
+    const contactsCollection = response.collection(settings.collection);
     const contact = req.body;
-    return contacts.replaceOne({ _id: ObjectID(objectID) }, contact);
+    return contactsCollection.replaceOne({ _id: ObjectID(objectID) }, contact);
   }).then(response => {
     res.json(response);
   }).catch(error => console.error(error));
@@ -60,8 +60,8 @@ server.post('/api/contacts/:id', (req, res) => {
 server.del('/api/contacts/:id', (req, res) => {
   const objectID = req.params.id;
   connection.then(response => {
-    const contacts = response.collection(settings.collection);
-    return contacts.deleteOne({ _id: ObjectID(objectID) });
+    const contactsCollection = response.collection(settings.collection);
+    return contactsCollection.deleteOne({ _id: ObjectID(objectID) });
   }).then(response => {
     res.json(response);
   });
