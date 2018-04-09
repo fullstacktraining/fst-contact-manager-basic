@@ -1,6 +1,6 @@
-# FstContactManager
+# The Complete JavaScript Developer - A primer to Full Stack JavaScript
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.3.2.
+Accompanying course: https://www.fullstacktraining.com/courses/the-complete-javascript-developer-a-primer-to-full-stack-javascript
 
 ## Development server
 
@@ -26,3 +26,5 @@ Before running the tests make sure you are serving the app via `ng serve`.
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+Copyright: Full Stack Training Ltd - 2018
